@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "react-dom";
 import axios from 'axios';
 import ListView from './components/ListView.jsx'
-
+import AddForm from './components/AddForm.jsx'
 const App = () => {
   const [wordList, setWordList] = React.useState([])
 
@@ -15,22 +15,30 @@ const App = () => {
 
   }, [])
 
+
   const addWord = () => {
     //takes in word and definition from inputs
+    let w = document.getElementById('addWord').value;
+    let d = document.getElementById('addDef').value;
     //forms them as an object { 'word': , 'definition: }
     //perform axios post with this body
+    axios.post('/glossary', {'word': w, 'definition': d})
+    .then(() => {
+      return axios.get('/glossary')
+    })
+    .then((result) => {
+      setWordList(result.data)
+    })
     //then perform axios get
     //then setWordList with results.data
-  };
+
+  }
 
   return (
     <div>
       <h1>GLOSSARY</h1>
       <div>
-        add a word here
-        <input className='addForm' placeholder='word'></input>
-        <input className='addForm' placeholder='definition'></input>
-        <button>Add</button>
+        <AddForm addWord={addWord}/>
       </div>
       <div>
         search for words
@@ -38,9 +46,9 @@ const App = () => {
         <button>Search</button>
       </div>
       <div>
-        Word List
+        <h3>Word List</h3>
         <ul>
-          {wordList.forEach((wordObj) => (
+          {wordList.map((wordObj) => (
             <ListView wordObj={wordObj} />
           ))}
         </ul>

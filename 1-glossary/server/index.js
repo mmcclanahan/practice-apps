@@ -9,7 +9,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(express.json());
 //can now use Word and its methods
-const {getAll, saveOne} = require("./db.js");
+const {getAll, saveOne, deleteIt} = require("./db.js");
 //get a post request with word and definition
 app.post('/glossary', (req, res) => {
   var objToPost = req.body;
@@ -34,8 +34,21 @@ app.get('/glossary', (req, res) => {
   })
 })
 
-app.patch('/glossary/',(req, res) => {
+app.patch('/glossary',(req, res) => {
 
+})
+//axios sends an endpoint i need to catch it here modularly
+app.delete('/glossary', (req, res) => {
+  console.log(req, 'app.delete')
+  deleteIt(req.body)
+  .then(() => {
+    console.log('hit deleteit')
+    res.status(200).send('deleted word')
+  })
+  .catch((error) => {
+    console.log('delete error')
+    res.status(500).send('problem deleting word')
+  })
 })
 
 app.listen(process.env.PORT);

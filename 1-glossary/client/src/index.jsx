@@ -20,7 +20,6 @@ const App = () => {
     //takes in word and definition from inputs
     let w = document.getElementById('addWord').value;
     let d = document.getElementById('addDef').value;
-    //forms them as an object { 'word': , 'definition: }
     //perform axios post with this body
     axios.post('/glossary', {'word': w, 'definition': d})
     .then(() => {
@@ -29,9 +28,12 @@ const App = () => {
     .then((result) => {
       setWordList(result.data)
     })
-    //then perform axios get
-    //then setWordList with results.data
+  }
 
+  const deleteWord = (wordObj) => {
+    let word = wordObj.word;
+    console.log(word);
+    axios.delete('/glossary', wordObj)
   }
 
   return (
@@ -49,7 +51,7 @@ const App = () => {
         <h3>Word List</h3>
         <ul>
           {wordList.map((wordObj) => (
-            <ListView wordObj={wordObj} />
+            <ListView wordObj={wordObj} deleteWord={deleteWord} />
           ))}
         </ul>
       </div>

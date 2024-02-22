@@ -18,9 +18,13 @@ const getAll = () => {
 const saveOne = (obj) => {
   return Word.create(obj);
 }
-
+const deleteIt = (word) => {
+  console.log(word,'in model')
+  return Word.deleteOne(word);
+}
 
 module.exports.Word = Word;
 module.exports.getAll = getAll;
 module.exports.saveOne = saveOne;
+module.exports.deleteIt = deleteIt;
 // 4. Import the models into any modules that need them

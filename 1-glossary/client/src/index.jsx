@@ -29,11 +29,20 @@ const App = () => {
       setWordList(result.data)
     })
   }
-
+  //fixed problem: last element on page was being removed from screen,
+  //on refresh it reappered and correct one was gone
+  //the problem was listview map needed unique keys
   const deleteWord = (wordObj) => {
     let word = wordObj.word;
     console.log(word);
-    axios.delete('/glossary', wordObj)
+    axios.delete(`/glossary/${word}`)
+    .then(() => {
+      return axios.get('/glossary')
+    })
+    .then((result) => {
+      console.log(result.data)
+      setWordList(result.data);
+    });
   }
 
   return (
@@ -51,14 +60,13 @@ const App = () => {
         <h3>Word List</h3>
         <ul>
           {wordList.map((wordObj) => (
-            <ListView wordObj={wordObj} deleteWord={deleteWord} />
+            <ListView key={wordObj.word} wordObj={wordObj} deleteWord={deleteWord} />
           ))}
         </ul>
       </div>
     </div>
   )
 }
-
 //
 render(
   <App />,

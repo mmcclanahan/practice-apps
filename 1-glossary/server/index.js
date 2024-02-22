@@ -11,6 +11,7 @@ app.use(express.json());
 //can now use Word and its methods
 const {getAll, saveOne, deleteIt} = require("./db.js");
 //get a post request with word and definition
+
 app.post('/glossary', (req, res) => {
   var objToPost = req.body;
   saveOne(req.body)
@@ -38,9 +39,9 @@ app.patch('/glossary',(req, res) => {
 
 })
 //axios sends an endpoint i need to catch it here modularly
-app.delete('/glossary', (req, res) => {
-  console.log(req, 'app.delete')
-  deleteIt(req.body)
+app.delete('/glossary/:word', (req, res) => {
+  console.log(req.params, 'app.delete')
+  deleteIt({ word: req.params.word})
   .then(() => {
     console.log('hit deleteit')
     res.status(200).send('deleted word')

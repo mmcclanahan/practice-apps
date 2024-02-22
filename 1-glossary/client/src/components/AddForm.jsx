@@ -10,7 +10,7 @@ const AddForm = (props) => {
 
   return (
     <div>
-        add a word here
+        add a word and definition
         <input id='addWord' placeholder='word' type='text'></input>
         <input id='addDef' placeholder='definition' type='text'></input>
         <button onClick={(e) => {props.addWord()}}>Add</button>

@@ -3,12 +3,6 @@ import React from 'react';
 const ListView = (props) => {
   //takes in props.wordObj
   const [wordObj, setWordObj] = React.useState(props.wordObj)
-  //when click on delete
-    //onClick deleteWord function
-  //it takes the word
-    //
-  //sends a delete request to server
-
 
   return (
     <li>

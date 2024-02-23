@@ -1,7 +1,8 @@
 import React from 'react';
 
 const SearchView = (props) => {
-  console.log(props.search)
+
+
   return (
     <div>
       <h6>search for words</h6>

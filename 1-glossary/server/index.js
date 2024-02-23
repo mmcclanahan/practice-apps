@@ -9,9 +9,9 @@ const app = express();
 app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(express.json());
 //can now use Word and its methods
-const {getAll, saveOne, deleteIt} = require("./db.js");
-//get a post request with word and definition
+const {getAll, saveOne, deleteIt, updateOne} = require("./db.js");
 
+//get a post request with word and definition
 app.post('/glossary', (req, res) => {
   var objToPost = req.body;
   saveOne(req.body)
@@ -27,6 +27,7 @@ app.post('/glossary', (req, res) => {
 app.get('/glossary', (req, res) => {
   getAll()
   .then((results) => {
+    console.log(results,'results get')
     res.status(200).send(results)
   })
   .catch((error) => {
@@ -34,14 +35,26 @@ app.get('/glossary', (req, res) => {
     res.status(500).send('couldnt find')
   })
 })
-
-app.patch('/glossary',(req, res) => {
-
+//
+app.put('/glossary/:_id',(req, res) => {
+  //either do body or params
+  var original = req.params;
+  var edit = req.body;
+  updateOne(original, edit)
+  .then(() => {
+    console.log('put complete')
+    res.status(200).send('definition edited')
+  })
+  .catch((error) => {
+    console.log(error)
+    res.status(500).send('error in put')
+  })
 })
+
 //axios sends an endpoint i need to catch it here modularly
-app.delete('/glossary/:word', (req, res) => {
+app.delete('/glossary/:_id', (req, res) => {
   console.log(req.params, 'app.delete')
-  deleteIt({ word: req.params.word})
+  deleteIt(req.params)
   .then(() => {
     console.log('hit deleteit')
     res.status(200).send('deleted word')

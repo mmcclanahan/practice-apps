@@ -4,6 +4,7 @@ import axios from 'axios';
 import ListView from './components/ListView.jsx'
 import AddForm from './components/AddForm.jsx'
 import SearchView from './components/SearchView.jsx'
+import EditPrompt from './components/EditPrompt.jsx'
 
 const App = () => {
   const [wordList, setWordList] = React.useState([])
@@ -27,10 +28,10 @@ const App = () => {
     axios.post('/glossary', {'word': w, 'definition': d})
     .then(() => {
       return axios.get('/glossary')
-    })
-    .then((result) => {
-      setWordList(result.data)
-      setSearchList(result.data)
+      .then((result) => {
+        setWordList(result.data)
+        setSearchList(result.data)
+      })
     })
     document.getElementById('addWord').value = '';
     document.getElementById('addDef').value = '';
@@ -39,16 +40,33 @@ const App = () => {
   //on refresh it reappered and correct one was gone
   //the problem was listview map needed unique keys
   const deleteWord = (wordObj) => {
-    let word = wordObj.word;
+    let word = wordObj._id;
     console.log(word);
     axios.delete(`/glossary/${word}`)
     .then(() => {
       return axios.get('/glossary')
+      .then((result) => {
+        setWordList(result.data);
+        setSearchList(result.data);
+      })
     })
-    .then((result) => {
-      setWordList(result.data);
-      setSearchList(result.data);
-    });
+  }
+
+  const editEntry = (wordObj) => {
+    var wordEdit = document.getElementById('wordEdit').value;
+    var defEdit = document.getElementById('defEdit').value;
+    console.log('before', searchList, wordList)
+      axios.put(`/glossary/${wordObj._id}`, {word: wordEdit, definition: defEdit})
+      .then(() => {
+        return axios.get('/glossary')
+        .then((result) => {
+          setWordList(result.data)
+          setSearchList(result.data)
+        })
+      })
+      .catch((error) => {
+        console.error('edit axios', error)
+      })
   }
 
   const searchWord = () => {
@@ -81,7 +99,7 @@ const App = () => {
         <h3>Word List</h3>
         <ul>
           {searchList.map((wordObj) => (
-            <ListView key={wordObj.word} wordObj={wordObj} deleteWord={deleteWord} />
+            <ListView key={wordObj._id} wordObj={wordObj} editEntry={editEntry} deleteWord={deleteWord} />
           ))}
         </ul>
       </div>

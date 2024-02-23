@@ -13,6 +13,7 @@ const glossarySchema =  mongoose.Schema({
 var Word = mongoose.model('Word', glossarySchema);
 // 3. Export the models
 const getAll = () => {
+  console.log('getall hit')
   return Word.find({}).exec();
 }
 const saveOne = (obj) => {
@@ -22,9 +23,14 @@ const deleteIt = (word) => {
   console.log(word,'in model')
   return Word.deleteOne(word);
 }
+const updateOne = (wordObj, newWordObj) => {
+  console.log('update hit')
+  return Word.findOneAndUpdate({ _id: wordObj._id }, newWordObj)
+}
 
 module.exports.Word = Word;
 module.exports.getAll = getAll;
 module.exports.saveOne = saveOne;
+module.exports.updateOne = updateOne;
 module.exports.deleteIt = deleteIt;
 // 4. Import the models into any modules that need them

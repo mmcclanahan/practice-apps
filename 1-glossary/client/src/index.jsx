@@ -36,33 +36,35 @@ const App = () => {
     document.getElementById('addWord').value = '';
     document.getElementById('addDef').value = '';
   }
-  //fixed problem: last element on page was being removed from screen,
-  //on refresh it reappered and correct one was gone
-  //the problem was listview map needed unique keys
+
   const deleteWord = (wordObj) => {
     let word = wordObj._id;
-    console.log(word);
     axios.delete(`/glossary/${word}`)
     .then(() => {
       return axios.get('/glossary')
-      .then((result) => {
-        setWordList(result.data);
-        setSearchList(result.data);
-      })
+    })
+    .then((response) => {
+      setWordList(response.data);
+      setSearchList(response.data);
+    })
+    .catch((err) => {
+      console.error('failed to delete entry: ', err);
     })
   }
+
+
 
   const editEntry = (wordObj) => {
     var wordEdit = document.getElementById('wordEdit').value;
     var defEdit = document.getElementById('defEdit').value;
-    console.log('before', searchList, wordList)
-      axios.put(`/glossary/${wordObj._id}`, {word: wordEdit, definition: defEdit})
+      //var defEdit = prompt('definition');
+      axios.put(`/glossary/${wordObj._id}`, { word: wordEdit, definition: defEdit})
       .then(() => {
         return axios.get('/glossary')
-        .then((result) => {
-          setWordList(result.data)
-          setSearchList(result.data)
-        })
+      })
+      .then((response) => {
+        setWordList(response.data);
+        setSearchList(response.data);
       })
       .catch((error) => {
         console.error('edit axios', error)

@@ -1,29 +1,25 @@
-import React from 'react';
+import React from 'react'
 import EditPrompt from './EditPrompt.jsx'
 const ListView = (props) => {
-  //takes in props.wordObj
-  const [wordObj, setWordObj] = React.useState(props.wordObj)
-  const [edit, setEdit] = React.useState(false);
-  console.log(edit)
+
+  const [edit, setEdit] = React.useState(false)
+
   const editing = (state) => {
-    if (state) {
-      setEdit(false)
-    } else {
-      setEdit(true)
-    }
-  }
+    setEdit(!state);
+  };
 
 
   return (
     <li>
-      <span className='listWords'>{wordObj.word}</span>: {wordObj.definition}
+      <span className='listWords'>{props.wordObj.word}</span>: {props.wordObj.definition}
       <button onClick={(event)=> {editing(edit)}}>edit</button>
-      <button onClick={(event)=>{props.deleteWord(wordObj)}}>delete</button>
+      <button onClick={(event)=>{props.deleteWord(props.wordObj)}}>delete</button>
       <div>
-        { edit ? <EditPrompt key={props.wordObj.definition} wordObj={wordObj} editing={editing} editEntry={props.editEntry} /> : null}
+        { edit ? <EditPrompt key={props.wordObj._id} wordObj={props.wordObj} editing={editing} editEntry={props.editEntry} /> : null}
       </div>
     </li>
-  )
-}
+  );
+};
+
 
 export default ListView;
